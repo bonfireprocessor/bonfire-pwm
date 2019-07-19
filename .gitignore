@@ -1,0 +1,5 @@
+*.pyc
+*.vcd
+*.ghw
+*.vhd
+/work-obj93.cf

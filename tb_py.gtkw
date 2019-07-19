@@ -1,0 +1,26 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Fri Jul 19 21:59:53 2019
+[*]
+[dumpfile] "/home/thomas/development/myhdl/bonfire_pwm/tb.vcd"
+[dumpfile_mtime] "Fri Jul 19 21:57:22 2019"
+[dumpfile_size] 30065
+[savefile] "/home/thomas/development/myhdl/bonfire_pwm/tb_py.gtkw"
+[timestart] 0
+[size] 1920 1031
+[pos] -1 -1
+*-11.391002 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb.
+[sst_width] 225
+[signals_width] 118
+[sst_expanded] 1
+[sst_vpaned_height] 304
+@28
+tb.clock
+tb.output
+@22
+tb.bus_in[3:0]
+@29
+tb.we
+[pattern_trace] 1
+[pattern_trace] 0
