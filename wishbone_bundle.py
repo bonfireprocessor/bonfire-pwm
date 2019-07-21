@@ -22,3 +22,20 @@ class Wishbone_bundle:
         #    self.ack.driven=True
         #    self.db_read.driven=True
 
+    
+    def sim_write(self,clock, adr, value):
+
+        yield clock.posedge
+
+        self.cyc.next=True
+        self.stb.next=True
+        self.adr.next=adr
+        self.db_write.next=value
+        self.we.next=True
+
+        yield join(self.ack.posedge,clock.posedge)
+
+        self.cyc.next=False 
+        self.stb.next=False
+        self.we.next=False 
+        

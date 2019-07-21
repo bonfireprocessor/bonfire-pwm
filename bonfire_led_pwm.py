@@ -13,7 +13,7 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels):
 
     @always_seq(clock.posedge,reset=reset)
     def seq():
-        print "dummy"
+     
         if wb_bus.stb and wb_bus.cyc and wb_bus.we:
             print "Write to", wb_bus.adr, ":", wb_bus.db_write
 

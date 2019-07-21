@@ -26,21 +26,7 @@ def led_pwm_tb():
 
     dut=bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,numChannels)
 
-    def wb_write_sim(wb,adr,value):
-
-        wb.cyc.next=True
-        wb.stb.next=True
-        wb.adr.next=adr
-        wb.db_write.next=value
-        wb.we.next=True
-        while True:
-            yield clock.posedge
-            if wb.ack:
-                break
-        print now(), "Write ack"
         
-
-
     @instance
     def stimulus():
         reset.next=True
@@ -48,28 +34,17 @@ def led_pwm_tb():
         reset.next=False 
         yield delay(40)
          
-        for i in range(255): 
-            wb_bus.cyc.next=True
-            wb_bus.stb.next=True
-            wb_bus.adr.next=i
-            wb_bus.db_write.next=0xff
-            wb_bus.we.next=True
-            while True:
-                yield clock.posedge
-                if wb_bus.ack:
-                    break
-            print now(), "Write ack"
-
-        #while True:
-        #    yield wb_write_sim(wb_bus,0,1)
+        for i in range(256): 
+       
+            #print i
+            yield wb_bus.sim_write(clock,i,0xdeadbeef)
+            #print "resume", i 
            
-      
-            #wb_write_sim(wb_bus,0,2)
 
     return instances()
 
 inst=led_pwm_tb()
-inst.convert(hdl='VHDL')
+#inst.convert(hdl='VHDL')
 inst.config_sim(trace=True)
 inst.run_sim(500)
 
