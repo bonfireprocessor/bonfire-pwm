@@ -6,7 +6,7 @@ from ClkDriver import ClkDriver
 from pwm import pwm 
 
 @block
-def tb():
+def tb_pwm():
     length=4
 
     we=Signal(bool(0))
@@ -15,12 +15,14 @@ def tb():
 
     output=Signal(bool(0))
 
+    cnt_enable = Signal(bool(1))
     clock  = Signal(bool(0))
     reset = ResetSignal(0, active=1, isasync=False)
 
     clk_driver= ClkDriver(clock) 
 
-    pwm_inst= pwm(we,bus_in,bus_out,output,True,clock,reset,length)
+    pwm_inst= pwm(we,bus_in,bus_out,output,cnt_enable,clock,reset,length)
+
 
     we_temp=Signal(bool(0))
 
@@ -51,7 +53,7 @@ def tb():
     return instances()
 
 
-inst=tb()
+inst=tb_pwm()
 inst.config_sim(trace=True)
 inst.run_sim(21000)
 inst.convert(hdl='VHDL')
