@@ -2,4 +2,5 @@
 *.vcd
 *.ghw
 *.vhd
+*.v 
 /work-obj93.cf
