@@ -26,7 +26,7 @@ def led_pwm_tb():
 
     dut=bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,numChannels)
 
-        
+   
     @instance
     def stimulus():
         reset.next=True
@@ -35,7 +35,6 @@ def led_pwm_tb():
         yield delay(40)
          
         for i in range(256): 
-       
             #print i
             yield wb_bus.sim_write(clock,i,0xdeadbeef)
             #print "resume", i 
