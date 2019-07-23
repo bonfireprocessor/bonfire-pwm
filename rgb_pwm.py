@@ -4,12 +4,12 @@ from myhdl import *
 from pwm import *
 
 @block
-def rgb_pwm(we, bus_in,bus_out,rgb_bundle,cnt_en,clock,reset):
+def rgb_pwm(we, bus_in,bus_out,red_o,green_o,blue_o,cnt_en,clock,reset):
 
     # Bus write slices 
-    sl_red=bus_in[24:16]
-    sl_green=bus_in[16:8]
-    sl_blue=bus_in[8:0]
+    sl_red=Signal(intbv(0)[8:])
+    sl_green=Signal(intbv(0)[8:])
+    sl_blue=Signal(intbv(0)[8:])
 
     # Bus read slices
     red_bus_out=Signal(intbv(0)[8:])
@@ -18,13 +18,16 @@ def rgb_pwm(we, bus_in,bus_out,rgb_bundle,cnt_en,clock,reset):
 
     dummy=Signal(intbv(0)[8:])
 
-    red_ch=pwm(we,sl_red,red_bus_out,rgb_bundle.red, cnt_en,clock,reset,8)
-    green_ch=pwm(we,sl_green,green_bus_out,rgb_bundle.green,cnt_en,clock,reset,8)
-    blue_ch=pwm(we,sl_blue,blue_bus_out,rgb_bundle.blue,cnt_en,clock,reset,8)
+    red_ch=pwm(we,sl_red,red_bus_out,red_o, cnt_en,clock,reset,8)
+    green_ch=pwm(we,sl_green,green_bus_out,green_o,cnt_en,clock,reset,8)
+    blue_ch=pwm(we,sl_blue,blue_bus_out,blue_o,cnt_en,clock,reset,8)
 
-#     @always_comb
-#     def comb():
+    @always_comb
+    def comb():
+        sl_red.next = bus_in[24:16]
+        sl_green.next = bus_in[16:8]
+        sl_blue.next = bus_in[8:0]
             
-#         bus_out.next=ConcatSignal(dummy,red_bus_out,green_bus_out,blue_bus_out)
+        #bus_out.next=concat(dummy,red_bus_out,green_bus_out,blue_bus_out)
 
     return instances()

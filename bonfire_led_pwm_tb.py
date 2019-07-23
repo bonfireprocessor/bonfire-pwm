@@ -12,7 +12,7 @@ def led_pwm_tb():
 
     wb_bus = Wishbone_bundle(True,8,0,32,False,False)
 
-    numChannels=1 
+    numChannels=4 
 
     red_v=Signal(intbv(0)[numChannels:])
     green_v=Signal(intbv(0)[numChannels:])
@@ -45,5 +45,5 @@ def led_pwm_tb():
 inst=led_pwm_tb()
 #inst.convert(hdl='VHDL')
 inst.config_sim(trace=True)
-inst.run_sim(500)
+inst.run_sim(50000)
 

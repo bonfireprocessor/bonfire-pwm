@@ -6,9 +6,8 @@ from wishbone_bundle import *
 numChannels=4
 
 
-#wb = Signal(intbv(0)[1:]) # temporary
+
 wb = Wishbone_bundle(False,4,2,32,False,False)
-#rgb = rgb_bundle()
 
 red_v=Signal(intbv(0)[numChannels:])
 green_v=Signal(intbv(0)[numChannels:])
