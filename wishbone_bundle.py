@@ -39,3 +39,21 @@ class Wishbone_bundle:
         self.stb.next=False
         self.we.next=False 
         
+    def sim_read(self,clock,adr):
+    
+        yield clock.posedge
+
+        self.cyc.next=True
+        self.stb.next=True
+        self.adr.next=adr
+        self.we.next=False
+        yield clock.posedge
+
+        while self.ack==0:
+            yield clock.posedge
+
+        self.cyc.next=False 
+        self.stb.next=False
+        self.we.next=False
+
+        

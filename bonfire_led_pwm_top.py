@@ -18,5 +18,5 @@ reset = ResetSignal(0, active=1, isasync=False)
 
 bonfire_led_pwm_top = bonfire_led_pwm(wb,red_v,green_v,blue_v,clock,reset,numChannels)
 
-bonfire_led_pwm_top.convert(hdl='VHDL')
+bonfire_led_pwm_top.convert(hdl='VHDL',std_logic_ports=True)
 
