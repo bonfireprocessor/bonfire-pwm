@@ -55,10 +55,11 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels):
 
     @always_comb
     def comb_outputs():
-        red_v.next = ConcatSignal(*reversed(red_o))
-        green_v.next = ConcatSignal(*reversed(green_o))
-        blue_v.next = ConcatSignal(*reversed(blue_o))
-
+        red_v.next=0
+        for i in range(gen_num_channels):
+            red_v.next[i]=red_o[i]
+            blue_v.next[i]=blue_o[i]
+            green_v.next[i]=green_o[i]
 
 
     return instances()
