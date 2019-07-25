@@ -51,7 +51,10 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels):
     @always_seq(clock.posedge,reset=reset)
     def bus_read():       
         wb_bus.db_read.next = db_read[adr]
-        read_ack.next = wb_bus.stb and wb_bus.cyc and not wb_bus.we
+        if read_ack==True:
+            read_ack.next=False
+        else:    
+            read_ack.next = wb_bus.stb and wb_bus.cyc and not wb_bus.we
 
     @always_comb
     def comb_outputs():
