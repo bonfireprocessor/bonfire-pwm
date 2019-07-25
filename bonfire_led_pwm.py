@@ -7,7 +7,7 @@ from rgb_pwm import *
 
 
 @block
-def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels):
+def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim=True):
     # wb_bus : Wishbone bus Object
     # red_v,green_v,blue_v : vector of red, green, blue PWM output signals
     # clock, reset : as usual
@@ -29,11 +29,13 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels):
     # for i in range(gen_num_channels):
     #     channels.append(rgb_pwm(we[i] ,wb_bus.db_write,db_read[i],rgb_bundles[i],cnt_en,clock,reset))
 
-    @always_seq(clock.posedge,reset=reset)
-    def seq():
+    if sim:
+        @always_seq(clock.posedge,reset=reset)
+        def sim_output():
 
-        if wb_bus.stb and wb_bus.cyc and wb_bus.we:
-            print "Write to", wb_bus.adr, ":", wb_bus.db_write
+            if wb_bus.stb and wb_bus.cyc and wb_bus.we:
+                print "Write to", wb_bus.adr, ":", wb_bus.db_write
+
 
     @always_comb
     def bus_comb():

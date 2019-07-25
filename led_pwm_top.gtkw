@@ -1,17 +1,18 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Wed Jul 24 13:07:07 2019
+[*] Thu Jul 25 17:48:26 2019
 [*]
 [dumpfile] "/home/thomas/development/myhdl/bonfire_pwm/led_pwm_tb.vcd"
-[dumpfile_mtime] "Wed Jul 24 13:06:31 2019"
-[dumpfile_size] 476510
+[dumpfile_mtime] "Thu Jul 25 17:47:53 2019"
+[dumpfile_size] 421366
 [savefile] "/home/thomas/development/myhdl/bonfire_pwm/led_pwm_top.gtkw"
 [timestart] 0
 [size] 1920 1031
 [pos] -1 -1
-*-12.848384 5370 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-12.848384 170 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] led_pwm_tb.
 [treeopen] led_pwm_tb.bonfire_led_pwm0.
+[treeopen] led_pwm_tb.bonfire_led_pwm0.rgb_pwm0.
 [sst_width] 225
 [signals_width] 282
 [sst_expanded] 1
@@ -30,7 +31,12 @@ led_pwm_tb.bonfire_led_pwm0.wb_bus_db_write[31:0]
 @28
 led_pwm_tb.bonfire_led_pwm0.red_v[3:0]
 led_pwm_tb.bonfire_led_pwm0.green_v[3:0]
-@29
 led_pwm_tb.bonfire_led_pwm0.blue_v[3:0]
+@22
+led_pwm_tb.bonfire_led_pwm0.rgb_pwm0.pwm0.bus_in[7:0]
+led_pwm_tb.bonfire_led_pwm0.rgb_pwm0.pwm1.bus_in[7:0]
+led_pwm_tb.bonfire_led_pwm0.rgb_pwm0.pwm2.bus_in[7:0]
+@23
+led_pwm_tb.bonfire_led_pwm0.rgb_pwm0.bus_in[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
