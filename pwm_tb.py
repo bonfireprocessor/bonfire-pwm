@@ -3,7 +3,7 @@ from myhdl import traceSignals,always,instance,delay,posedge,always_seq
 
 from ClkDriver import ClkDriver
 
-from pwm import pwm 
+from bonfire_pwm_lib import pwm 
 
 @block
 def tb_pwm():
@@ -56,4 +56,4 @@ def tb_pwm():
 inst=tb_pwm()
 inst.config_sim(trace=True)
 inst.run_sim(21000)
-inst.convert(hdl='VHDL')
+#inst.convert(hdl='VHDL')

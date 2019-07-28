@@ -2,7 +2,7 @@ from myhdl import *
 
 from ClkDriver import ClkDriver
 
-from divider import divider
+from bonfire_pwm_lib import divider
 
 @block
 def tb_divider():

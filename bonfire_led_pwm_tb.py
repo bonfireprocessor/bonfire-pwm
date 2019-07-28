@@ -6,7 +6,7 @@ from ClkDriver import *
 
 
 numChannels=4 
-values=[0x00205070,0x00ffffff,0x00000000,0x00deadbe]
+values=(0,0x00205070,0x00ffffff,0x00000000,0x00deadbe)
  
 @block
 def led_pwm_tb():
@@ -27,6 +27,10 @@ def led_pwm_tb():
  
     dut=bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,numChannels)
 
+    start=Signal(bool(0))
+    finish=Signal(bool(0))
+    write_inst=wb_bus.simulation_writer(start,0,values,finish,clock,reset)
+
    
     @instance
     def stimulus():
@@ -35,17 +39,19 @@ def led_pwm_tb():
         reset.next=False 
         yield delay(40)
 
-   
-
-        for i in range(4): 
-            #print i
-            yield wb_bus.sim_write(clock,i,values[i])
-            #print "resume", i 
-        yield delay(256*20)
+        #Trigger the simulation writer
+        start.next=True
+        yield finish  
  
-        while True:
-            for i in range(4):
-                yield wb_bus.sim_read(clock,i)
+        # for i in range(4): 
+        #     #print i
+        #     yield wb_sim_write(wb_bus,clock,i,values[i])
+          
+        yield delay(20)
+ 
+        for i in range(1):
+            for i in range(len(values)):
+                yield wb_sim_read(wb_bus,clock,i)
                 print i, wb_bus.db_read
                 if values[i]!=wb_bus.db_read:
                     print "Error at address",i  
@@ -54,7 +60,11 @@ def led_pwm_tb():
     return instances()
 
 inst=led_pwm_tb()
-#inst.convert(hdl='VHDL')
+
+#inst.convert(hdl='VHDL',name='bonfire_led_pwm_tb',path='tb')
+#inst.analyze_convert()
+
 inst.config_sim(trace=True)
 inst.run_sim(50000)
+
 
