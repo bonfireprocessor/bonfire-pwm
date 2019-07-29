@@ -13,39 +13,38 @@ def pwm(we,bus_in,bus_out,output,cnt_en,clock,reset,gen_bits):
     pwm_counter = Signal(modbv(0)[gen_bits:])
     pwm_next_max = Signal(modbv(0)[gen_bits:])
     pwm_max = Signal(modbv(0)[gen_bits:])
-    
+
     @always_seq(clock.posedge, reset=reset)
     def seq():
-         
+
         if we:
             pwm_next_max.next = bus_in
-             
+
         if cnt_en:
             if pwm_counter== 2**gen_bits-2:
                 pwm_counter.next = 0
                 pwm_max.next=pwm_next_max
-            else:  
+            else:
                 pwm_counter.next = pwm_counter + 1
 
-    
+
     @always_comb
     def comb():
         output.next= pwm_counter < pwm_max
-        bus_out.next=pwm_next_max  
-          
+        bus_out.next=pwm_next_max
 
-    return instances() 
-      
+
+    return instances()
+
 
 @block
 def divider(we,bus_in,bus_out,en_out,clock,reset,gen_bits):
-    
-   
+
+
     counter = Signal(modbv(0)[gen_bits:])
     div = Signal(intbv(0)[gen_bits:])
     zero = Signal(bool(0))
 
-    print div.val, gen_bits
 
     @always_seq(clock.posedge,reset=reset)
     def seq():
@@ -53,21 +52,21 @@ def divider(we,bus_in,bus_out,en_out,clock,reset,gen_bits):
         #print counter.val
         if we:
             div.next = bus_in
-            counter.next=0 # Reset counter 
-            
+            counter.next=0 # Reset counter
+
         if zero:
             counter.next=div
         else:
             counter.next = counter - 1
 
-       
+
     @always_comb
     def comb():
         z = counter == 0
         zero.next = z
         en_out.next  = z
 
-        bus_out.next=div         
+        bus_out.next=div
 
     return instances()
 

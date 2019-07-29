@@ -3,7 +3,7 @@
 
 from myhdl import *
 
-from rgb_pwm import *
+from bonfire_pwm_lib import *
 
 
 @block
@@ -17,18 +17,24 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim
     green_o = [Signal(bool(0)) for i in range(gen_num_channels)]
     blue_o = [Signal(bool(0)) for i in range(gen_num_channels)]
 
-    db_read = [Signal(intbv(0)[32:]) for i in range(gen_num_channels)]
-    we = [Signal(bool(0)) for i in range(gen_num_channels)]
-    cnt_en=True
-    adr = Signal(intbv(val=0,min=0,max=gen_num_channels))
+    # Divider Output
+    cnt_en = Signal(bool(True))
+
+    num_registers=gen_num_channels+1 # Channel Registers + Divider Register 
+    # Bus Interface signals
+    db_read = [Signal(intbv(0)[32:]) for i in range(num_registers)]
+    we = [Signal(bool(0)) for i in range(num_registers)]
+    adr = Signal(intbv(val=0,min=0,max=num_registers))
     read_ack = Signal(bool(0))
+    db_write=Signal(intbv(0)[32:]) # Workarund  to avoid wrong names in VHDL toplevel
 
+    # Module instances 
+    # Divider
+    divider_inst=divider(we[0],db_write,db_read[0],cnt_en,clock,reset,16)
 
-    channels =  [ rgb_pwm( we[i] ,wb_bus.db_write,db_read[i],red_o[i],green_o[i],blue_o[i],cnt_en,clock,reset ) for i in range(gen_num_channels) ]
-    # channels=[]
-    # for i in range(gen_num_channels):
-    #     channels.append(rgb_pwm(we[i] ,wb_bus.db_write,db_read[i],rgb_bundles[i],cnt_en,clock,reset))
-
+    # RGB Channels   
+    channels =  [ rgb_pwm( we[i] ,db_write,db_read[i],red_o[i-1],green_o[i-1],blue_o[i-1],cnt_en,clock,reset ) for i in range(1,num_registers) ]
+   
     if sim:
         @always_seq(clock.posedge,reset=reset)
         def sim_output():
@@ -39,23 +45,25 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim
 
     @always_comb
     def bus_comb():
-        
+
         wr_en=wb_bus.stb and wb_bus.cyc and wb_bus.we
         wb_bus.ack.next=wr_en or read_ack
         adr.next=wb_bus.adr[len(adr):]
 
-        for i in range(gen_num_channels):
+        db_write.next=wb_bus.db_write
+
+        for i in range(num_registers):
              # Address decoder
             if wb_bus.adr==i:
                 we[i].next = wr_en
 
 
     @always_seq(clock.posedge,reset=reset)
-    def bus_read():       
+    def bus_read():
         wb_bus.db_read.next = db_read[adr]
         if read_ack==True:
             read_ack.next=False
-        else:    
+        else:
             read_ack.next = wb_bus.stb and wb_bus.cyc and not wb_bus.we
 
     @always_comb

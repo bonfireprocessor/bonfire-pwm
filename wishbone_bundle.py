@@ -11,18 +11,18 @@ class Wishbone_bundle:
         self.adr = Signal(intbv(0)[adrHigh:adrLow])
         self.db_write = Signal(intbv(0)[dataWidth:])
         self.db_read =  Signal(intbv(0)[dataWidth:])
-        #TODO: Add condionals for b4 and bte signals 
+        #TODO: Add condionals for b4 and bte signals
         # if master:
         #     self.cyc.driven=True
         #     self.stb.driven=True
-        #     self.we.driven=True 
+        #     self.we.driven=True
         #     self.adr.driven=True
-        #     self.db_write.driven=True 
+        #     self.db_write.driven=True
         # else:
         #    self.ack.driven=True
         #    self.db_read.driven=True
 
-    
+
     def sim_write(self,clock, adr, value):
 
         yield clock.posedge
@@ -35,12 +35,12 @@ class Wishbone_bundle:
 
         yield join(self.ack.posedge,clock.posedge)
 
-        self.cyc.next=False 
+        self.cyc.next=False
         self.stb.next=False
-        self.we.next=False 
-        
+        self.we.next=False
+
     def sim_read(self,clock,adr):
-    
+
         yield clock.posedge
 
         self.cyc.next=True
@@ -52,7 +52,7 @@ class Wishbone_bundle:
         while self.ack==0:
             yield clock.posedge
 
-        self.cyc.next=False 
+        self.cyc.next=False
         self.stb.next=False
         self.we.next=False
 
@@ -60,7 +60,7 @@ class Wishbone_bundle:
     def simulation_writer(self,start_sig_i,start_address,value_list, finish_sig_o,clock,reset):
         # start_address: int with address to start
         # value_list: List of values to write
-        # finish_sig_o: Output signal asserted when finished 
+        # finish_sig_o: Output signal asserted when finished
 
         @instance
         def wb_writer():
@@ -71,20 +71,20 @@ class Wishbone_bundle:
 
                 self.cyc.next=True
                 self.stb.next=True
-                self.adr.next=start_address+i 
+                self.adr.next=start_address+i
                 self.db_write.next=value_list[i]
                 self.we.next=True
 
                 while self.ack==0:
                     yield clock.posedge
 
-                self.cyc.next=False 
+                self.cyc.next=False
                 self.stb.next=False
                 self.we.next=False
 
             finish_sig_o.next=True
 
-        return instances()    
+        return instances()
 
 
 def wb_sim_write(wb, clock, adr, value):
