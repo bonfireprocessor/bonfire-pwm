@@ -20,7 +20,7 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim
     # Divider Output
     cnt_en = Signal(bool(True))
 
-    num_registers=gen_num_channels+1 # Channel Registers + Divider Register 
+    num_registers=gen_num_channels+1 # Channel Registers + Divider Register
     # Bus Interface signals
     db_read = [Signal(intbv(0)[32:]) for i in range(num_registers)]
     we = [Signal(bool(0)) for i in range(num_registers)]
@@ -28,13 +28,13 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim
     read_ack = Signal(bool(0))
     db_write=Signal(intbv(0)[32:]) # Workarund  to avoid wrong names in VHDL toplevel
 
-    # Module instances 
+    # Module instances
     # Divider
     divider_inst=divider(we[0],db_write,db_read[0],cnt_en,clock,reset,16)
 
-    # RGB Channels   
+    # RGB Channels
     channels =  [ rgb_pwm( we[i] ,db_write,db_read[i],red_o[i-1],green_o[i-1],blue_o[i-1],cnt_en,clock,reset ) for i in range(1,num_registers) ]
-   
+
     if sim:
         @always_seq(clock.posedge,reset=reset)
         def sim_output():
@@ -56,15 +56,18 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim
              # Address decoder
             if wb_bus.adr==i:
                 we[i].next = wr_en
+            else:
+                we[i].next = 0
 
 
     @always_seq(clock.posedge,reset=reset)
     def bus_read():
-        wb_bus.db_read.next = db_read[adr]
+
         if read_ack==True:
             read_ack.next=False
-        else:
-            read_ack.next = wb_bus.stb and wb_bus.cyc and not wb_bus.we
+        elif wb_bus.stb and wb_bus.cyc and not wb_bus.we:
+            read_ack.next = True
+            wb_bus.db_read.next = db_read[adr]
 
     @always_comb
     def comb_outputs():
