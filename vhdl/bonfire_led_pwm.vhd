@@ -82,18 +82,19 @@ architecture rtl of bonfire_led_pwm is
 
   component bonfire_led_pwm_core
   port (
-    gpio_o                           : out std_logic_vector(11 downto 0);
-    clock                            : in  std_logic;
-    reset                            : in  std_logic;
-    bonfire_led_pwm0_wb_bus_we       : in  std_logic;
-    bonfire_led_pwm0_wb_bus_adr      : in  std_logic_vector(2 downto 0);
-    bonfire_led_pwm0_wb_bus_stb      : in  std_logic;
-    bonfire_led_pwm0_wb_bus_ack      : out std_logic;
-    bonfire_led_pwm0_wb_bus_cyc      : in  std_logic;
-    bonfire_led_pwm0_wb_bus_db_read  : out std_logic_vector(31 downto 0);
-    bonfire_led_pwm0_wb_bus_db_write : in  std_logic_vector(31 downto 0)
-  );
-  end component bonfire_led_pwm_core;
+    gpio_o      : out std_logic_vector(11 downto 0);
+    clock       : in  std_logic;
+    reset       : in  std_logic;
+    wb_we       : in  std_logic;
+    wb_adr      : in  std_logic_vector(2 downto 0);
+    wb_stb      : in  std_logic;
+    wb_ack      : out std_logic;
+    wb_cyc      : in  std_logic;
+    wb_db_read  : out std_logic_vector(31 downto 0);
+    wb_db_write : in  std_logic_vector(31 downto 0)
+);
+end component bonfire_led_pwm_core;
+
 
 
   begin
@@ -106,13 +107,13 @@ architecture rtl of bonfire_led_pwm is
 
     clock           => wb_clk_i,
     reset           => wb_rst_i,
-    bonfire_led_pwm0_wb_bus_we       => wb_we_i,
-    bonfire_led_pwm0_wb_bus_adr      => wb_bus_adr,
-    bonfire_led_pwm0_wb_bus_stb      => wb_stb_i,
-    bonfire_led_pwm0_wb_bus_ack      => wb_ack_o,
-    bonfire_led_pwm0_wb_bus_cyc      => wb_cyc_i,
-    bonfire_led_pwm0_wb_bus_db_read  => wb_dat_o,
-    bonfire_led_pwm0_wb_bus_db_write => wb_dat_i,
+    wb_we       => wb_we_i,
+    wb_adr      => wb_bus_adr,
+    wb_stb      => wb_stb_i,
+    wb_ack      => wb_ack_o,
+    wb_cyc      => wb_cyc_i,
+    wb_db_read  => wb_dat_o,
+    wb_db_write => wb_dat_i,
     gpio_o          => gpio_o
   );
 

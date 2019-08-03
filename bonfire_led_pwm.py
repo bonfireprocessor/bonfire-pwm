@@ -26,14 +26,14 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim
     we = [Signal(bool(0)) for i in range(num_registers)]
     adr = Signal(intbv(val=0,min=0,max=num_registers))
     read_ack = Signal(bool(0))
-    db_write=Signal(intbv(0)[32:]) # Workarund  to avoid wrong names in VHDL toplevel
+    
 
     # Module instances
     # Divider
-    divider_inst=divider(we[0],db_write,db_read[0],cnt_en,clock,reset,16)
+    divider_inst=divider(we[0],wb_bus.db_write,db_read[0],cnt_en,clock,reset,16)
 
     # RGB Channels
-    channels =  [ rgb_pwm( we[i] ,db_write,db_read[i],red_o[i-1],green_o[i-1],blue_o[i-1],cnt_en,clock,reset ) for i in range(1,num_registers) ]
+    channels =  [ rgb_pwm( we[i] ,wb_bus.db_write,db_read[i],red_o[i-1],green_o[i-1],blue_o[i-1],cnt_en,clock,reset ) for i in range(1,num_registers) ]
 
     if sim:
         @always_seq(clock.posedge,reset=reset)
@@ -49,8 +49,6 @@ def bonfire_led_pwm(wb_bus,red_v,green_v,blue_v,clock,reset,gen_num_channels,sim
         wr_en=wb_bus.stb and wb_bus.cyc and wb_bus.we
         wb_bus.ack.next=wr_en or read_ack
         adr.next=wb_bus.adr[len(adr):]
-
-        db_write.next=wb_bus.db_write
 
         for i in range(num_registers):
              # Address decoder

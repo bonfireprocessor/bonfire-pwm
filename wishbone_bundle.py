@@ -12,15 +12,7 @@ class Wishbone_bundle:
         self.db_write = Signal(intbv(0)[dataWidth:])
         self.db_read =  Signal(intbv(0)[dataWidth:])
         #TODO: Add condionals for b4 and bte signals
-        # if master:
-        #     self.cyc.driven=True
-        #     self.stb.driven=True
-        #     self.we.driven=True
-        #     self.adr.driven=True
-        #     self.db_write.driven=True
-        # else:
-        #    self.ack.driven=True
-        #    self.db_read.driven=True
+        
 
 
     def sim_write(self,clock, adr, value):

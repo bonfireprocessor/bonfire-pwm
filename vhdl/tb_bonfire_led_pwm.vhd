@@ -64,6 +64,7 @@ port map (
 Stimulus : process
 
     variable d,t : std_logic_vector(wb_dat_i'range);
+    variable i : natural;
 
     procedure wb_write(address : in natural; data : in std_logic_vector(wb_dat_i'range)) is
     begin
@@ -110,9 +111,16 @@ begin
 
   wb_write(0,X"00000001"); -- divider
 
-  wb_write(1,X"00205070");
-  wb_write(2,X"00205070");
-  wb_write(3,X"00205070");
+  wb_write(1,X"00808080");
+  wb_write(2,X"00808080");
+  wb_write(3,X"00808080");
+
+  i := 0;
+  -- Wait 1024 Clock cycles
+  while i<1024 loop
+    wait until rising_edge(wb_clk_i);
+    i :=  i + 1;
+  end loop;
 
   wb_read(0,d);
   assert d=X"00000001" report "Divider was changed"  severity failure;
